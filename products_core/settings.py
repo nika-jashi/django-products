@@ -18,7 +18,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 THIRD_PARTY_APPS = [
-
+    'mptt',
+    'taggit',
 ]
 
 PROJECT_APPS = [
