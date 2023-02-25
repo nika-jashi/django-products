@@ -7,7 +7,7 @@ from taggit.managers import TaggableManager
 class Product(models.Model):
     product_name = models.CharField(max_length=58)
     product_caption = models.TextField(max_length=128)
-    product_thumbnail = models.ImageField(upload_to="product_thumbnail/")
+    product_thumbnail = models.ImageField(upload_to="products/thumbnails/")
     product_tags = TaggableManager()
     product_slug = models.SlugField(unique=True, max_length=58)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -21,7 +21,7 @@ class Product(models.Model):
     product_meta_name = models.CharField(max_length=58)
     product_meta_caption = models.TextField(max_length=128)
 
-    category = TreeForeignKey('ProductCategory', related_name="products", on_delete=models.CASCADE)
+    product_category = TreeForeignKey('ProductCategory', related_name="products", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.product_name
@@ -38,7 +38,7 @@ class Product(models.Model):
 
 class ProductGallery(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    image = models.FileField(upload_to="products/")
+    image = models.FileField(upload_to="products/gallery/")
 
     def __str__(self):
         return self.image
