@@ -22,7 +22,7 @@ class ProductForm(forms.ModelForm):
 class ProductGalleyForm(forms.ModelForm):
     class Meta:
         model = ProductGallery
-        fields = ['image', 'product']
+        fields = ['image']
         widgets = {
             'image': ClearableFileInput(attrs={'multiple': True}),
         }

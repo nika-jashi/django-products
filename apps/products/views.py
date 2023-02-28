@@ -1,8 +1,10 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
 from apps.products.forms import ProductForm, ProductGalleyForm, ProductCategoryForm
 from apps.products.models import Product, ProductGallery
+from apps.products.utils import get_product_obj, get_gallery_obj
 
 
 class ProductCreateView(View):
@@ -25,7 +27,7 @@ class ProductCreateView(View):
             product = Product.objects.filter(product_slug=product_slug).first()
             for image in images_gallery:
                 ProductGallery.objects.create(product=product, image=image)
-            return redirect('products:create')
+            return redirect('products:detail', product_slug)
 
         context = {
             'product_form': product_form,
@@ -35,18 +37,11 @@ class ProductCreateView(View):
 
 
 class ProductDetailView(View):
-    def get_product_obj(self, slug):
-        product_instance = Product.objects.filter(product_slug=slug).first()
-        return product_instance
-
-    def get_gallery_obj(self, slug):
-        gallery_instance = ProductGallery.objects.filter(product__product_slug=slug).first()
-        return gallery_instance
 
     def get(self, request, *args, **kwargs):
         product_slug = self.kwargs['slug']
-        product = self.get_product_obj(slug=product_slug)
-        gallery = self.get_gallery_obj(slug=product_slug)
+        product = get_product_obj(slug=product_slug)
+        gallery = get_gallery_obj(slug=product_slug)
         if product is None:
             return render(request, 'errors/404.html')
         context = {
@@ -58,21 +53,16 @@ class ProductDetailView(View):
 
 
 class ProductUpdateView(View):
-    def get_product_obj(self, slug):
-        product_instance = Product.objects.filter(product_slug=slug).first()
-        return product_instance
-
-    def get_gallery_obj(self, slug):
-        gallery_instance = ProductGallery.objects.filter(product__product_slug=slug).first()
-        return gallery_instance
 
     def get(self, request, *args, **kwargs):
         product_slug = self.kwargs['slug']
 
-        product = self.get_product_obj(slug=product_slug)
-        gallery = self.get_gallery_obj(slug=product_slug)
+        product = get_product_obj(slug=product_slug)
+        gallery = get_gallery_obj(slug=product_slug)
         product_form = ProductForm(instance=product)
         product_gallery_form = ProductGalleyForm(instance=gallery)
+        if product is None:
+            return render(request, 'errors/404.html')
         context = {
             'product_form': product_form,
             'product_gallery_form': product_gallery_form,
@@ -82,8 +72,8 @@ class ProductUpdateView(View):
     def post(self, request, *args, **kwargs):
         product_slug = self.kwargs['slug']
 
-        product = self.get_product_obj(slug=product_slug)
-        gallery = self.get_gallery_obj(slug=product_slug)
+        product = get_product_obj(slug=product_slug)
+        gallery = get_gallery_obj(slug=product_slug)
 
         product_form = ProductForm(request.POST, request.FILES, instance=product)
         product_gallery_form = ProductGalleyForm(request.POST, request.FILES, instance=gallery)
@@ -96,7 +86,7 @@ class ProductUpdateView(View):
             for image in images_gallery:
                 ProductGallery.objects.update(product=product, image=image)
 
-            return redirect('products:read', product_slug)
+            return redirect('products:detail', product_slug)
 
         context = {
             'product_form': product_form,
@@ -104,6 +94,13 @@ class ProductUpdateView(View):
         }
 
         return render(request, 'products/product_update.html', context)
+
+
+class ProductGalleryDelete(View):
+    def get(self, request, *args, **kwargs):
+        image = get_object_or_404(ProductGallery)
+        image.delete()
+        return HttpResponse(request, status=202)
 
 
 class ProductDeleteView(View):
