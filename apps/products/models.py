@@ -8,15 +8,16 @@ class Product(models.Model):
     product_name = models.CharField(max_length=58)
     product_caption = models.TextField(max_length=128)
     product_thumbnail = models.ImageField(upload_to="products/thumbnails/")
-    product_tags = TaggableManager()
+    product_tags = TaggableManager(related_name='tags')
     product_slug = models.SlugField(unique=True, max_length=58)
     date_created = models.DateTimeField(auto_now_add=True)
+    product_views = models.IntegerField(default=0)
     # product_specification
     product_description = models.TextField(max_length=1024)
 
     product_price = models.DecimalField(max_digits=12, decimal_places=2)
     product_sale_percentage = models.DecimalField(max_digits=3, decimal_places=0, default=0)
-    product_sale_price = models.DecimalField(max_digits=12, decimal_places=2)
+    product_sale_price = models.DecimalField(max_digits=12, decimal_places=2, default=0, null=True, blank=True)
 
     product_meta_name = models.CharField(max_length=58)
     product_meta_caption = models.TextField(max_length=128)

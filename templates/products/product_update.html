@@ -1,0 +1,11 @@
+<form class="form" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>{{ product_form.as_p }}</p>
+    <br><br>
+    {{ product_gallery_form.image }}
+    <br><br>
+    <input type="submit" name="" id="">
+</form>
+{% for image in images %}
+    {{ image }}
+{% endfor %}

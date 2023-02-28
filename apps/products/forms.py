@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ClearableFileInput
+from django.forms import ClearableFileInput, TextInput
 
 from apps.products.models import Product, ProductCategory, ProductGallery
 
@@ -22,7 +22,7 @@ class ProductForm(forms.ModelForm):
 class ProductGalleyForm(forms.ModelForm):
     class Meta:
         model = ProductGallery
-        fields = ['image']
+        fields = ['image', 'product']
         widgets = {
             'image': ClearableFileInput(attrs={'multiple': True}),
         }
