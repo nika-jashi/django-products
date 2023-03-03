@@ -3,8 +3,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
 from apps.products.forms import ProductForm, ProductGalleyForm, ProductCategoryForm
-from apps.products.models import Product, ProductGallery
+from apps.products.models import Product, ProductGallery, ProductCategory
 from apps.products.utils import get_product_obj, get_gallery_obj
+
+
+class ProductListView(View):
+    def get(self, request, *args, **kwargs):
+        products = Product.objects.all()
+        context = {
+            'products': products,
+        }
+        return render(request, 'products/product_list.html', context)
 
 
 class ProductCreateView(View):
@@ -49,7 +58,7 @@ class ProductDetailView(View):
             'gallery': gallery,
         }
 
-        return render(request, 'products/product_read.html', context)
+        return render(request, 'products/product_detail.html', context)
 
 
 class ProductUpdateView(View):
@@ -117,6 +126,15 @@ class ProductDeleteView(View):
 """ Category """
 
 
+class ProductCategoryListView(View):
+    def get(self, request, *args, **kwargs):
+        categories = ProductCategory.objects.all()
+        context = {
+            'categories': categories,
+        }
+        return render(request, 'categories/category_list.html', context)
+
+
 class ProductCategoryCreateView(View):
     def get(self, request, *args, **kwargs):
         form = ProductCategoryForm()
@@ -132,5 +150,31 @@ class ProductCategoryCreateView(View):
         }
         if form.is_valid():
             form.save()
-            return redirect('products:category-create')
+            return redirect('products:category-list')
         return render(request, 'categories/category_create.html', context)
+
+
+class ProductCategoryUpdateView(View):
+    def get(self, request, *args, **kwargs):
+        category_slug = self.kwargs['slug']
+        category = ProductCategory.objects.get(slug=category_slug)
+        form = ProductCategoryForm(instance=category)
+
+        context = {
+            'form': form
+        }
+
+        return render(request, 'categories/category_update.html', context)
+
+    def post(self, request, *args, **kwargs):
+        category_slug = self.kwargs['slug']
+        category = ProductCategory.objects.get(slug=category_slug)
+        form = ProductCategoryForm(request.POST, request.FILES, instance=category)
+
+        context = {
+            'form': form,
+        }
+        if form.is_valid():
+            form.save()
+            return redirect('products:category-list')
+        return render(request, 'categories/category_update.html', context)

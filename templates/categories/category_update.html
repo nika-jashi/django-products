@@ -1,0 +1,17 @@
+<form id="servicecreaeteform" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.name }}
+    {{ form.slug }}
+    {{ form.parent }}
+    {{ form.category_images }}
+    {% if form.non_field_errors %}
+        <div>{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="text-end mb-4" style="margin-top: 30px;">
+        <button type="submit" value="submit" form="servicecreaeteform"
+                class="btn btn-success w-sm">update
+        </button>
+    </div>
+
+</form>
