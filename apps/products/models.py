@@ -1,13 +1,19 @@
+import os
+
 from django.db import models
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from taggit.managers import TaggableManager
 
 
+def image_save(filename):
+    return os.path.basename(filename)
+
+
 class Product(models.Model):
     product_name = models.CharField(max_length=58)
     product_caption = models.TextField(max_length=128)
-    product_thumbnail = models.ImageField(upload_to="products/thumbnails/")
+    product_thumbnail = models.ImageField(upload_to="products/thumbnails/%Y/%m/")
     product_tags = TaggableManager(related_name='tags')
     product_slug = models.SlugField(unique=True, max_length=58)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -28,6 +34,7 @@ class Product(models.Model):
         return self.product_name
 
     def save(self, *args, **kwargs):
+        self.product_thumbnail.name = os.path.basename(self.product_thumbnail.name)
         self.product_meta_name = self.product_name
         self.product_meta_caption = self.product_caption
         if self.product_sale_percentage > 0:
@@ -39,10 +46,14 @@ class Product(models.Model):
 
 class ProductGallery(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    image = models.FileField(upload_to="products/gallery/")
+    image = models.ImageField(upload_to="products/gallery/images/%Y/%m/")
 
     def __str__(self):
         return self.image
+
+    def save(self, *args, **kwargs):
+        self.image.name = os.path.basename(self.image.name)
+        super(ProductGallery, self).save(*args, **kwargs)
 
 
 class ProductCategory(MPTTModel):

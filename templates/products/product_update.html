@@ -1,11 +1,29 @@
+{% load static %}
 <form class="form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <p>{{ product_form.as_p }}</p>
     <br><br>
+    {{ product_gallery_form.image.label_tag }}
     {{ product_gallery_form.image }}
     <br><br>
+
+
     <input type="submit" name="" id="">
 </form>
-{% for image in images %}
-    {{ image }}
-{% endfor %}
+{% if product_gallery %}
+    {% for image in product_gallery %}
+
+        <form class="form" method="POST" enctype="multipart/form-data"
+              action="{% url 'products:gallery-delete' pk=image.pk slug=product_instance.product_slug %}">
+            {% csrf_token %}
+
+
+            <a href="{% static image.image.url %}" target="_blank">
+                <img src="{% static image.image.url %}" width="50" height="50" alt="image">
+
+            </a>
+            <button class="button-danger" type="submit"> Delete</button>
+        </form>
+    {% endfor %}
+
+{% endif %}

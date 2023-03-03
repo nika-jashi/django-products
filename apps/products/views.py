@@ -58,14 +58,17 @@ class ProductUpdateView(View):
         product_slug = self.kwargs['slug']
 
         product = get_product_obj(slug=product_slug)
-        gallery = get_gallery_obj(slug=product_slug)
         product_form = ProductForm(instance=product)
-        product_gallery_form = ProductGalleyForm(instance=gallery)
+        product_gallery_form = ProductGalleyForm()
+        product_gallery = ProductGallery.objects.filter(product__product_slug=product_slug)
+        product_instance = Product.objects.get(product_slug=product_slug)
         if product is None:
             return render(request, 'errors/404.html')
         context = {
             'product_form': product_form,
             'product_gallery_form': product_gallery_form,
+            'product_gallery': product_gallery,
+            'product_instance': product_instance,
         }
         return render(request, 'products/product_update.html', context)
 
@@ -73,18 +76,16 @@ class ProductUpdateView(View):
         product_slug = self.kwargs['slug']
 
         product = get_product_obj(slug=product_slug)
-        gallery = get_gallery_obj(slug=product_slug)
 
         product_form = ProductForm(request.POST, request.FILES, instance=product)
-        product_gallery_form = ProductGalleyForm(request.POST, request.FILES, instance=gallery)
+        product_gallery_form = ProductGalleyForm(request.POST, request.FILES)
         images_gallery = request.FILES.getlist('image')
-
         if product_form.is_valid() and product_gallery_form.is_valid():
             product_form.save()
             product = Product.objects.filter(product_slug=product_slug).first()
 
             for image in images_gallery:
-                ProductGallery.objects.update(product=product, image=image)
+                ProductGallery.objects.create(product=product, image=image)
 
             return redirect('products:detail', product_slug)
 
@@ -97,10 +98,12 @@ class ProductUpdateView(View):
 
 
 class ProductGalleryDelete(View):
-    def get(self, request, *args, **kwargs):
-        image = get_object_or_404(ProductGallery)
+    def post(self, request, *args, **kwargs):
+        gallery_image_pk = kwargs.get('pk')
+        product_instance = kwargs.get('slug')
+        image = get_object_or_404(ProductGallery, pk=gallery_image_pk)
         image.delete()
-        return HttpResponse(request, status=202)
+        return redirect('products:update', product_instance)
 
 
 class ProductDeleteView(View):
