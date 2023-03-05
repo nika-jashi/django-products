@@ -1,13 +1,17 @@
 {% load mptt_tags %}
-<ul class="root">
+<ul>
     {% recursetree categories %}
-        <li>
-            {{ node.name }}
+        <li>{{ node.category_name }}
+            <a href="{% url 'products:product-category-edit' slug=node.category_slug %}">edit</a>
+            <a href="{% url 'products:product-category-delete' slug=node.category_slug %}">delete</a>
+
             {% if not node.is_leaf_node %}
-                <ul class="children">
+
+                <ul>
                     {{ children }}
                 </ul>
             {% endif %}
         </li>
+
     {% endrecursetree %}
 </ul>

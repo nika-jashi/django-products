@@ -1,0 +1,15 @@
+<title>Find Me - Log Out</title>
+<div class="container">
+    <div>
+        <h4 class="">Successful Logout</h4>
+        <div>
+            <div class="alert alert-success text-dark text-center">
+                You have successfully logged out. <br>
+            </div>
+            <a class="btn btn-info float-right"
+               href="{% url 'accounts:login' %}">Log In Here</a>
+        </div>
+    </div>
+    <a class="btn btn-info float-right"
+       href="{% url 'products:list' %}">Home Page</a>
+</div>

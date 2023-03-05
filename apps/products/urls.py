@@ -9,7 +9,8 @@ from apps.products.views import (ProductCreateView,
                                  ProductGalleryDelete,
                                  ProductListView,
                                  ProductCategoryListView,
-                                 ProductCategoryUpdateView)
+                                 ProductCategoryUpdateView,
+                                 CategoryDeleteView)
 
 app_name = "products"
 urlpatterns = [
@@ -21,7 +22,9 @@ urlpatterns = [
     path('gallery/delete/<slug:slug>/<int:pk>/', ProductGalleryDelete.as_view(), name='gallery-delete'),
 
     # categories
-    path('category/', ProductCategoryListView.as_view(), name="category-list"),
-    path('category/create/', ProductCategoryCreateView.as_view(), name="category-create"),
-    path('category/edit/<slug:slug>/', ProductCategoryUpdateView.as_view(), name="product-category-edit"),
+    path('categories/', ProductCategoryListView.as_view(), name="category-list"),
+    path('categories/create/', ProductCategoryCreateView.as_view(), name="category-create"),
+    path('categories/edit/<slug:slug>/', ProductCategoryUpdateView.as_view(), name="product-category-edit"),
+    path('categories/delete/<slug:slug>/', CategoryDeleteView.as_view(), name="product-category-delete"),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

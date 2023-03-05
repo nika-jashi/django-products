@@ -1,0 +1,38 @@
+<title>Registration</title>
+<div class="center_itself container custom_card">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="centered_items">
+            <h2>Registration</h2>
+            {{ form.email }}
+            {% if form.email.errors %}
+                {{ form.email.errors }}
+            {% endif %}
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+                {{ form.first_name.errors }}
+            {% endif %}
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+                {{ form.last_name.errors }}
+            {% endif %}
+            {{ form.password }}
+            {% if form.password.errors %}
+                {{ form.password.errors }}
+            {% endif %}
+            {{ form.password_confirm }}
+            {% if form.non_field_errors %}
+                <div>{{ form.non_field_errors }}</div>
+            {% endif %}
+        </div>
+        <div class="wrapper">
+            <button class="regular_button" type="submit">Sign Up</button>
+        </div>
+    </form>
+    <div class="center_itself" style="margin: 1%">
+        <small class="text-muted">
+            Already Have An Account? <a class="ml-2" href="{% url 'accounts:login' %}">Sign In</a>
+        </small>
+    </div>
+
+</div>

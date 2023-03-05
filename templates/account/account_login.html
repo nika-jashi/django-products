@@ -1,0 +1,25 @@
+<title>Find Me - Log In</title>
+<div class="container custom_card center_itself">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="centered_items">
+            <h2>Log In</h2>
+            {{ form.email }}
+            {% if form.email.errors %}
+                {{ form.email.errors }}
+            {% endif %}
+            {{ form.password }}
+            {% if form.password.errors %}
+                {{ form.password.errors }}
+            {% endif %}
+        </div>
+        <div class="wrapper" style="margin-top: 2%">
+            <button class="regular_button" type="submit">Login</button>
+        </div>
+    </form>
+    <div class="centered_items">
+        <small class="text-muted">
+            Need An Account? <a class="ml-2" href="{% url 'accounts:registration' %}">Sign Up Now</a>
+        </small>
+    </div>
+</div>

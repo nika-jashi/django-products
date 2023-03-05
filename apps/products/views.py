@@ -178,3 +178,11 @@ class ProductCategoryUpdateView(View):
             form.save()
             return redirect('products:category-list')
         return render(request, 'categories/category_update.html', context)
+
+
+class CategoryDeleteView(View):
+    def get(self, request, *args, **kwargs):
+        slug = kwargs.get('slug')
+        category = get_object_or_404(ProductCategory, slug=slug)
+        category.delete()
+        return redirect('product-category-list')

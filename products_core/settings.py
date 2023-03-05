@@ -26,6 +26,7 @@ THIRD_PARTY_APPS = [
 
 PROJECT_APPS = [
     'apps.products.apps.ProductsConfig',
+    'apps.accounts.apps.AccountsConfig',
 ]
 
 INSTALLED_APPS = [
@@ -121,6 +122,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTH_USER_MODEL = 'accounts.CustomAccount'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR,"static")]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

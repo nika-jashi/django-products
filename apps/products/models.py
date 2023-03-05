@@ -4,10 +4,7 @@ from django.db import models
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from taggit.managers import TaggableManager
-
-
-def image_save(filename):
-    return os.path.basename(filename)
+from apps.accounts.models import CustomAccount
 
 
 class Product(models.Model):
@@ -18,6 +15,7 @@ class Product(models.Model):
     product_slug = models.SlugField(unique=True, max_length=58)
     date_created = models.DateTimeField(auto_now_add=True)
     product_views = models.IntegerField(default=0)
+    owner = models.ForeignKey(to=CustomAccount, on_delete=models.CASCADE)
     # product_specification
     product_description = models.TextField(max_length=1024)
 
