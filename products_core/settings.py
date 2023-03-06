@@ -27,6 +27,7 @@ THIRD_PARTY_APPS = [
 PROJECT_APPS = [
     'apps.products.apps.ProductsConfig',
     'apps.accounts.apps.AccountsConfig',
+    'apps.cart.apps.CartConfig',
 ]
 
 INSTALLED_APPS = [

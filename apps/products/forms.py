@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ClearableFileInput, TextInput, Select,NumberInput,Textarea
+from django.forms import ClearableFileInput, TextInput, Textarea
 
 from apps.products.models import Product, ProductCategory, ProductGallery
 

@@ -11,15 +11,17 @@ from apps.products.views import (ProductCreateView,
                                  ProductCategoryListView,
                                  ProductCategoryUpdateView,
                                  CategoryDeleteView)
+from django.contrib.auth.decorators import login_required as lr
+
 
 app_name = "products"
 urlpatterns = [
     path('', ProductListView.as_view(), name="list"),
-    path('create/', ProductCreateView.as_view(), name="create"),
+    path('create/', lr(ProductCreateView.as_view()), name="create"),
     path('detail/<slug:slug>/', ProductDetailView.as_view(), name="detail"),
-    path('update/<slug:slug>/', ProductUpdateView.as_view(), name="update"),
-    path('delete/<slug:slug>/', ProductDeleteView.as_view(), name="delete"),
-    path('gallery/delete/<slug:slug>/<int:pk>/', ProductGalleryDelete.as_view(), name='gallery-delete'),
+    path('update/<slug:slug>/', lr(ProductUpdateView.as_view()), name="update"),
+    path('delete/<slug:slug>/', lr(ProductDeleteView.as_view()), name="delete"),
+    path('gallery/delete/<slug:slug>/<int:pk>/', lr(ProductGalleryDelete.as_view()), name='gallery-delete'),
 
     # categories
     path('categories/', ProductCategoryListView.as_view(), name="category-list"),

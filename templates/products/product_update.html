@@ -1,4 +1,5 @@
 {% load static %}
+<link rel="stylesheet" type='text/css' href="{% static 'main.css' %}">
 <form class="form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <p>{{ product_form.as_p }}</p>
@@ -13,7 +14,7 @@
 {% if product_gallery %}
     {% for image in product_gallery %}
 
-        <form class="form" method="POST" enctype="multipart/form-data"
+        <form class="form" method="POST" enctype="multipart/form-data" target="sub"
               action="{% url 'products:gallery-delete' pk=image.pk slug=product_instance.product_slug %}">
             {% csrf_token %}
 
@@ -22,8 +23,11 @@
                 <img src="{% static image.image.url %}" width="50" height="50" alt="image">
 
             </a>
-            <button class="button-danger" type="submit"> Delete</button>
+            <button class="button-danger"  type="submit" onClick="window.location.reload();" > Delete</button>
         </form>
-    {% endfor %}
 
+    {% endfor %}
+        <iframe id="subframe" name="sub">
+
+        </iframe>
 {% endif %}

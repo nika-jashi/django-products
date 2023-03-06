@@ -1,3 +1,17 @@
+{% load static %}
+<link rel="stylesheet" type='text/css' href="{% static 'main.css' %}">
 {% for product in products %}
     {{ product }}
+
+    <form class="form" method="POST" enctype="multipart/form-data" target="sub"
+          action="{% url 'cart:cart-add' slug=product.product_slug %}">
+        {% csrf_token %}
+        <button class="button-danger" type="submit" onClick="window.location.reload();">Add To Cart</button>
+
+    </form>
+
 {% endfor %}
+
+<iframe id="subframe" name="sub">
+
+        </iframe>

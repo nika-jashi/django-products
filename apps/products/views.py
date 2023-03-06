@@ -31,7 +31,9 @@ class ProductCreateView(View):
         product_gallery_form = ProductGalleyForm(request.POST, request.FILES)
         images_gallery = request.FILES.getlist('image')
         if product_form.is_valid() and product_gallery_form.is_valid():
-            product_form.save()
+            instance = product_form.save(commit=False)
+            instance.owner = request.user
+            instance.save()
             product_slug = product_form.cleaned_data['product_slug']
             product = Product.objects.filter(product_slug=product_slug).first()
             for image in images_gallery:
